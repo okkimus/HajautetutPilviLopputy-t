@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Arrays;
 
 public class SummausPalvelu {
 
@@ -12,6 +13,11 @@ public class SummausPalvelu {
     private static ObjectInputStream oIn;
     private final int PORT = 5000;
     private final boolean verbose = true;
+
+    //porttien lukumäärä alustus
+    private static int lkm=-1;
+    // kovakoodatut portit
+    public static int[] portit = {54121, 54222, 54223, 54224, 54225, 54226, 54227, 54228, 54229, 54330};
 
     /**
      * Luodaan summauspalvelu ja sen tarvitsemat osaset.
@@ -39,23 +45,20 @@ public class SummausPalvelu {
         SummausPalvelu s = new SummausPalvelu();
 
         int summausPalvelijoidenLkm = s.lueLuku();
-        s.lahetaPortit(summausPalvelijoidenLkm);
-        System.out.println("Printataan uudestaan luettu luku " + s.lueLuku());
-
+        System.out.println("saatiin Y:ltä pyyntö " + summausPalvelijoidenLkm + ":lle palvelijalle");
+        System.out.println("Luodaan shared data");
         SharedData sd = new SharedData(summausPalvelijoidenLkm);
+        s.lahetaPortit(summausPalvelijoidenLkm);
+        //viedään portit ja tarvittava lkm portteja
+        SummausThread summaus = new SummausThread(s.portit, summausPalvelijoidenLkm, sd);
 
-        for (int portti = 54321; portti < 54331; portti++) {
-            SummausThread Summaus = new SummausThread();
-            Summaus.SummausThread(portti);
-
-
-        }
 
         boolean kaynnissa = true;
         ObjectOutputStream serverinVirtaUlos = s.getoOut();
 
         while (kaynnissa) {
             int komento = s.lueLuku();
+            System.out.println("Y teki pyynnön: " + komento);
             int vastaus = -1;
             // Ensimmäinen kerta kun käytän switchiä :D
             switch (komento) {
@@ -71,7 +74,13 @@ public class SummausPalvelu {
                     vastaus = sd.palautaLukujenLukumaara();
                     break;
             }
-            serverinVirtaUlos.writeInt(vastaus);
+            if (kaynnissa) {
+                serverinVirtaUlos.writeInt(vastaus);
+                serverinVirtaUlos.flush();
+            } else {
+               s.suljeSocketit();
+            }
+
         }
     }
 
@@ -81,8 +90,7 @@ public class SummausPalvelu {
      *
      */
     private void lahetaPortit(int lkm) throws IOException {
-        // kovakoodatut portit
-        int[] portit = {54121, 54222, 54223, 54224, 54225, 54226, 54227, 54228, 54229, 54330};
+
         // käydään läpi portit ja kirjoitetaan ne ObjectOutputStreamiin
         for (int i = 0; i < lkm; i++) {
             System.out.println("Kirjoitetaan: " + portit[i]);
@@ -132,6 +140,11 @@ public class SummausPalvelu {
         }
         // Suljetaan DatagramSocket kun UDP paketti on lähetetty
         clientSocket.close();
+    }
+
+    private void suljeSocketit() throws IOException {
+        clientSocket.close();
+        serverSocket.close();
     }
 
     public ObjectOutputStream getoOut() {

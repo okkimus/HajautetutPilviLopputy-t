@@ -1,5 +1,7 @@
+import java.util.Arrays;
+
 public class SharedData {
-    private int[] summat;
+    public int[] summat;
     private int lkm;
 
     public SharedData(int summausPavelijoidenLkm) {
@@ -21,6 +23,7 @@ public class SharedData {
      *
      */
     public int palautaKokonaissumma() {
+        System.out.println(Arrays.toString(summat));
         int summa = 0;
         for (int i : summat) {
             summa += i;
@@ -33,16 +36,20 @@ public class SharedData {
      *
      */
     public int palautaSuurimmanSummanPalvelija() {
+
+        System.out.println(Arrays.toString(summat));
         int indeksi = 0;
         for (int i = 0; i < summat.length - 1; i++) {
             if (summat[i] < summat[i+1]) {
-                indeksi = i;
+                indeksi = i + 1;
             }
         }
-        return indeksi;
+        return indeksi + 1;
     }
 
     public int palautaLukujenLukumaara() {
+
+        System.out.println(Arrays.toString(summat));
         return lkm;
     }
 
