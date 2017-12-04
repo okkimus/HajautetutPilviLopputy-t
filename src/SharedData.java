@@ -13,7 +13,7 @@ public class SharedData {
      * Summaa summattavan luvun listalla olevaan indeksiin (palvelijanNumero)
      * ja kasvattaa SharedDatan lukumäärä kenttää yhdellä
      */
-    public synchronized void summaa(int palvelijanNumero, int summattava) {
+    public void summaa(int palvelijanNumero, int summattava) {
         summat[palvelijanNumero] += summattava;
         lkm++;
     }
