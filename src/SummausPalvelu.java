@@ -13,6 +13,11 @@ public class SummausPalvelu {
     private final int PORT = 5000;
     private final boolean verbose = true;
 
+    //porttien lukumäärä alustus
+    private static int lkm=-1;
+    // kovakoodatut portit
+    private static int[] portit = {54121, 54222, 54223, 54224, 54225, 54226, 54227, 54228, 54229, 54330};
+
     /**
      * Luodaan summauspalvelu ja sen tarvitsemat osaset.
      */
@@ -39,12 +44,10 @@ public class SummausPalvelu {
         SummausPalvelu s = new SummausPalvelu();
         s.lahetaPortit(s.luePorttienLkm());
 
-        for (int portti = 54321; portti < 54331; portti++) {
+            //viedään portit ja tarvittava lkm portteja
             SummausThread Summaus = new SummausThread();
-            Summaus.SummausThread(portti);
+            Summaus.SummausThread(portit, lkm);
 
-
-        }
     }
 
     /**
@@ -53,8 +56,7 @@ public class SummausPalvelu {
      *
      */
     private void lahetaPortit(int lkm) throws IOException {
-        // kovakoodatut portit
-        int[] portit = {54121, 54222, 54223, 54224, 54225, 54226, 54227, 54228, 54229, 54330};
+
         // käydään läpi portit ja kirjoitetaan ne ObjectOutputStreamiin
         for (int i = 0; i < lkm; i++) {
             System.out.println("Kirjoitetaan: " + portit[i]);
@@ -69,7 +71,6 @@ public class SummausPalvelu {
      * TODO: metodia käytetään vain alussa
      */
     private int luePorttienLkm() {
-        int lkm = -1;
         try {
             // luetaan kokonaisluku ObjectInputStreamista
             lkm = oIn.readInt();

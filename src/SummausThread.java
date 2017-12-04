@@ -4,22 +4,22 @@ import java.net.*;
 //luokka luomaan porttiyhteys
 public class SummausThread {
 
-    //väliaikainen kovakoodattu portti
-    private static int PORT = 54121;
 
-    public void SummausThread(int portti) {
+    public void SummausThread(int [] portit, int lkm) {
 
-        try {
-            ServerSocket serverSocket = new ServerSocket(PORT);
-            Socket clientSocket = serverSocket.accept();
+        for(int i=0; i<lkm; i++) {
+            try {
+                ServerSocket serverSocket = new ServerSocket(portit[i]);
+                Socket clientSocket = serverSocket.accept();
 
-            System.out.println("Connection from" + clientSocket.getInetAddress() + " port " + clientSocket.getPort());
+                System.out.println("Connection from" + clientSocket.getInetAddress() + " port " + clientSocket.getPort());
 
-            //uusi thread
-            new SummausThreadHandler(clientSocket).start();
+                //uusi thread
+                new SummausThreadHandler(clientSocket).start();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
