@@ -5,22 +5,22 @@ import java.net.*;
 public class SummausThread {
 
     //väliaikainen kovakoodattu portti
-    private static int PORT=54121;
+    private static int PORT = 54121;
 
     public void SummausThread(int portti) {
 
         try {
-        ServerSocket serverSocket = new ServerSocket(PORT);
+            ServerSocket serverSocket = new ServerSocket(PORT);
             Socket clientSocket = serverSocket.accept();
 
-               System.out.println("Connection from" + clientSocket.getInetAddress() + " port " + clientSocket.getPort());
+            System.out.println("Connection from" + clientSocket.getInetAddress() + " port " + clientSocket.getPort());
 
             //uusi thread
-               new SummausThreadHandler(clientSocket).start();
+            new SummausThreadHandler(clientSocket).start();
 
-           } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            }
+        }
 
     }
 
