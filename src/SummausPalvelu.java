@@ -9,7 +9,7 @@ public class SummausPalvelu {
     private InputStream iS;
     private OutputStream oS;
     private ObjectOutputStream oOut;
-    private ObjectInputStream oIn;
+    private static ObjectInputStream oIn;
     private final int PORT = 5000;
     private final boolean verbose = true;
 
@@ -39,6 +39,12 @@ public class SummausPalvelu {
         SummausPalvelu s = new SummausPalvelu();
         s.lahetaPortit(s.luePorttienLkm());
 
+        for (int portti = 54321; portti < 54331; portti++) {
+            SummausThread Summaus = new SummausThread();
+            Summaus.SummausThread(portti);
+
+
+        }
     }
 
     /**
@@ -48,7 +54,7 @@ public class SummausPalvelu {
      */
     private void lahetaPortit(int lkm) throws IOException {
         // kovakoodatut portit
-        int[] portit = {54321, 54320, 54322, 54323, 54324, 54325, 54326, 54327, 54328, 54329};
+        int[] portit = {54121, 54222, 54223, 54224, 54225, 54226, 54227, 54228, 54229, 54330};
         // käydään läpi portit ja kirjoitetaan ne ObjectOutputStreamiin
         for (int i = 0; i < lkm; i++) {
             System.out.println("Kirjoitetaan: " + portit[i]);
