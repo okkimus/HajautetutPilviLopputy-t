@@ -37,13 +37,41 @@ public class SummausPalvelu {
 
     public static void main(String[] args) throws Exception {
         SummausPalvelu s = new SummausPalvelu();
-        s.lahetaPortit(s.luePorttienLkm());
+
+        int summausPalvelijoidenLkm = s.lueLuku();
+        s.lahetaPortit(summausPalvelijoidenLkm);
+        System.out.println("Printataan uudestaan luettu luku " + s.lueLuku());
+
+        SharedData sd = new SharedData(summausPalvelijoidenLkm);
 
         for (int portti = 54321; portti < 54331; portti++) {
             SummausThread Summaus = new SummausThread();
             Summaus.SummausThread(portti);
 
 
+        }
+
+        boolean kaynnissa = true;
+        ObjectOutputStream serverinVirtaUlos = s.getoOut();
+
+        while (kaynnissa) {
+            int komento = s.lueLuku();
+            int vastaus = -1;
+            // Ensimmäinen kerta kun käytän switchiä :D
+            switch (komento) {
+                case 0:
+                    kaynnissa = false; // TODO: hoida kaikki sulkemiseen tarvittavat asiat.
+                case 1:
+                    vastaus = sd.palautaKokonaissumma();
+                    break;
+                case 2:
+                    vastaus = sd.palautaSuurimmanSummanPalvelija();
+                    break;
+                case 3:
+                    vastaus = sd.palautaLukujenLukumaara();
+                    break;
+            }
+            serverinVirtaUlos.writeInt(vastaus);
         }
     }
 
@@ -64,19 +92,18 @@ public class SummausPalvelu {
     }
 
     /**
-     * Lukee Y:n lähettämän porttien lkm
-     * TODO: Tämä kannattaa varmaan generalisoida lukemaan myös niitä muita Y:n lähettämiä kyselyjä...muuten tätä
-     * TODO: metodia käytetään vain alussa
+     * Lukee ja palauttaa Y:n lähettämän luvun
+     *
      */
-    private int luePorttienLkm() {
-        int lkm = -1;
+    private int lueLuku() {
+        int luku = -1;
         try {
             // luetaan kokonaisluku ObjectInputStreamista
-            lkm = oIn.readInt();
+            luku = oIn.readInt();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return lkm;
+        return luku;
     }
 
     /**
@@ -107,4 +134,7 @@ public class SummausPalvelu {
         clientSocket.close();
     }
 
+    public ObjectOutputStream getoOut() {
+        return oOut;
+    }
 }
