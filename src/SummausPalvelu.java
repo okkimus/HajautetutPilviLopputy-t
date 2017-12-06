@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.Arrays;
 
 public class SummausPalvelu {
 
@@ -13,11 +12,6 @@ public class SummausPalvelu {
     private static ObjectInputStream oIn;
     private final int PORT = 5000;
     private final boolean verbose = true;
-
-    //porttien lukumäärä alustus
-    private static int lkm=-1;
-    // kovakoodatut portit
-    public static int[] portit = {54121, 54222, 54223, 54224, 54225, 54226, 54227, 54228, 54229, 54330};
 
     /**
      * Luodaan summauspalvelu ja sen tarvitsemat osaset.
@@ -48,9 +42,11 @@ public class SummausPalvelu {
         System.out.println("saatiin Y:ltä pyyntö " + summausPalvelijoidenLkm + ":lle palvelijalle");
         System.out.println("Luodaan shared data");
         SharedData sd = new SharedData(summausPalvelijoidenLkm);
-        s.lahetaPortit(summausPalvelijoidenLkm);
+        int [] portit = new int[summausPalvelijoidenLkm];
+        portit = sd.satunnaisetPortit(summausPalvelijoidenLkm);
+        s.lahetaPortit(portit);
         //viedään portit ja tarvittava lkm portteja
-        SummausThread summaus = new SummausThread(s.portit, summausPalvelijoidenLkm, sd);
+        SummausThread summaus = new SummausThread(portit, summausPalvelijoidenLkm, sd);
 
 
         boolean kaynnissa = true;
@@ -89,10 +85,10 @@ public class SummausPalvelu {
      * TODO: tätä ennen täytyy luoda threadit, ja katsoa niiden portit(?)
      *
      */
-    private void lahetaPortit(int lkm) throws IOException {
+    private void lahetaPortit(int [] portit) throws IOException {
 
         // käydään läpi portit ja kirjoitetaan ne ObjectOutputStreamiin
-        for (int i = 0; i < lkm; i++) {
+        for (int i = 0; i < portit.length; i++) {
             System.out.println("Kirjoitetaan: " + portit[i]);
             oOut.writeInt(portit[i]);
         }

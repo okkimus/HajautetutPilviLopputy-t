@@ -51,6 +51,10 @@ public class SummausThread {
 
                 while (lukujaJaljella) {
                     int luku = oIn.readInt();
+
+                    // testaukseen
+                    System.out.println("WorkDistributorilta tullut luku: "+ luku);
+
                     if (luku == 0) {
                         lukujaJaljella = false;
                     } else {
@@ -59,8 +63,10 @@ public class SummausThread {
                 }
                 clientSocket.close();
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            }catch (EOFException e) {
+                // Ignore or do whatever you wanted to signal the end of file.
+            } catch (IOException closeException) {
+                closeException.printStackTrace();
             }
         }
     }//SummausThreadHandler
