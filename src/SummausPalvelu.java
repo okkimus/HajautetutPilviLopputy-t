@@ -61,14 +61,17 @@ public class SummausPalvelu {
                 case 0:
                     kaynnissa = false; // TODO: hoida kaikki sulkemiseen tarvittavat asiat.
                 case 1:
-                    vastaus = sd.palautaKokonaissumma();
-                    break;
+                    synchronized (sd) {
+                        vastaus = sd.palautaKokonaissumma();
+                    }break;
                 case 2:
-                    vastaus = sd.palautaSuurimmanSummanPalvelija();
-                    break;
+                    synchronized (sd) {
+                        vastaus = sd.palautaSuurimmanSummanPalvelija();
+                    }break;
                 case 3:
-                    vastaus = sd.palautaLukujenLukumaara();
-                    break;
+                    synchronized (sd) {
+                        vastaus = sd.palautaLukujenLukumaara();
+                    }break;
             }
             if (kaynnissa) {
                 serverinVirtaUlos.writeInt(vastaus);

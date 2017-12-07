@@ -86,11 +86,12 @@ public class SummausThread {
                     if (luku == 0) {
                         lukujaJaljella = false;
                     } else {
-                        sd.summaa(indeksi, luku);
+                        synchronized (sd){
+                            sd.summaa(indeksi, luku);
+                        }
                     }
                 }
                 clientSocket.close();
-
             }catch (EOFException e) {
 
             } catch (IOException closeException) {
