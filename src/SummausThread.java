@@ -1,13 +1,30 @@
-import sun.security.provider.SHA;
+/**
+ * Authors:
+ * Mikko Metsäranta, misame@utu.fi, 515662
+ * Jan-Mikael Ihanus, jamiih@utu,fi, 516329
+ *
+ * course: HAJAUTETUT OHJELMISTOJÄRJESTELMÄT JA PILVIPALVELUT, SYKSY 2017
+ *
+ */
+
 
 import java.io.*;
 import java.net.*;
 
-//luokka luomaan porttiyhteys
+/**
+ * Luokka summauspalvelijoiden luomiseen ja hallinnoimiseen
+ */
+
 public class SummausThread {
     private SharedData sd;
 
 
+    /**
+     *
+     * @param portit lisältää tarvittavat portit summauspalvelijoille
+     * @param lkm montako palvelijaa tarvitaan
+     * @param sd jaetun luokkatiedoston osoittaminen
+     */
     public SummausThread(int[] portit, int lkm, SharedData sd) {
         this.sd = sd;
         for(int i=0; i<lkm; i++) {
@@ -24,14 +41,23 @@ public class SummausThread {
                 e.printStackTrace();
             }
         }
-
     }
 
-    //Luokka luomaan itse thread
+    /**
+     * Luokka luomaan itse thread
+     */
+
     static class SummausThreadHandler extends Thread {
         private Socket clientSocket;
         private int indeksi;
         private SharedData sd;
+
+        /**
+         *
+         * @param s viittaa sokettiin
+         * @param i vastaa indeksiä, joka on siis kuinka mones luku on kyseessä jonka Workdistributor on lähettänyt
+         * @param sharedData viittaa SharedData -luokkatiedostoon, joka tallentaa/lokeroi summauslukuja
+         */
 
         public SummausThreadHandler(Socket s, int i, SharedData sharedData) {
             indeksi = i;
@@ -41,12 +67,14 @@ public class SummausThread {
 
         public void run() {
             try {
+
+                // streamit kohdilleen
                 InputStream iS = clientSocket.getInputStream();
                 OutputStream oS = clientSocket.getOutputStream();
                 ObjectOutputStream oOut = new ObjectOutputStream(oS);
                 ObjectInputStream oIn = new ObjectInputStream(iS);
 
-                //testaukseen
+                //alustaa onko lukuja jäljellä streamissä
                 boolean lukujaJaljella = true;
 
                 while (lukujaJaljella) {
@@ -64,8 +92,9 @@ public class SummausThread {
                 clientSocket.close();
 
             }catch (EOFException e) {
-                // Ignore or do whatever you wanted to signal the end of file.
+
             } catch (IOException closeException) {
+                // hallittu exceptionin hallinta
                 closeException.printStackTrace();
             }
         }
