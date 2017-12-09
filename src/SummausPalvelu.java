@@ -56,6 +56,7 @@ public class SummausPalvelu {
             int komento = s.lueLuku();
             System.out.println("Y teki pyynnön: " + komento);
             int vastaus = -1;
+            Thread.sleep(100);
             // Ensimmäinen kerta kun käytän switchiä :D
             switch (komento) {
                 case 0:
@@ -67,6 +68,7 @@ public class SummausPalvelu {
                 case 2:
                     synchronized (sd) {
                         vastaus = sd.palautaSuurimmanSummanPalvelija();
+                        System.out.println("CASE 2 VASTAUS: " + vastaus);
                     }break;
                 case 3:
                     synchronized (sd) {

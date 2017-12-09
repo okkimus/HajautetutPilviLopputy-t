@@ -81,7 +81,7 @@ public class SummausThread {
                     int luku = oIn.readInt();
 
                     // testaukseen
-                    System.out.println("WorkDistributorilta tullut luku: "+ luku);
+                    //System.out.println("WorkDistributorilta tullut luku: "+ luku);
 
                     if (luku == 0) {
                         lukujaJaljella = false;

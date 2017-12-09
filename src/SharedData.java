@@ -36,12 +36,11 @@ public class SharedData {
      * Palauttaa indeksin, jolla on suurin summa
      */
     public synchronized int palautaSuurimmanSummanPalvelija() {
-
         System.out.println(Arrays.toString(summat));
         int indeksi = 0;
-        for (int i = 0; i < summat.length - 1; i++) {
-            if (summat[i] < summat[i + 1]) {
-                indeksi = i + 1;
+        for (int i = 0; i < summat.length; i++) {
+            if (summat[indeksi] < summat[i]) {
+                indeksi = i;
             }
         }
         return indeksi + 1;
