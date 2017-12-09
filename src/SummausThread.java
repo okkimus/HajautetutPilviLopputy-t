@@ -1,15 +1,13 @@
-/**
- * Authors:
+import java.io.*;
+import java.net.*;
+
+/** Authors:
  * Mikko Metsäranta, misame@utu.fi, 515662
  * Jan-Mikael Ihanus, jamiih@utu,fi, 516329
  *
  * course: HAJAUTETUT OHJELMISTOJÄRJESTELMÄT JA PILVIPALVELUT, SYKSY 2017
- *
  */
 
-
-import java.io.*;
-import java.net.*;
 
 /**
  * Luokka summauspalvelijoiden luomiseen ja hallinnoimiseen
@@ -22,9 +20,10 @@ public class SummausThread {
     /**
      *
      * @param portit lisältää tarvittavat portit summauspalvelijoille
-     * @param lkm montako palvelijaa tarvitaan
+     * @param lkm montako summapalvelijaa tarvitaan
      * @param sd jaetun luokkatiedoston osoittaminen
      */
+
     public SummausThread(int[] portit, int lkm, SharedData sd) {
         this.sd = sd;
         for(int i=0; i<lkm; i++) {
@@ -97,6 +96,7 @@ public class SummausThread {
             }catch (EOFException e) {
 
             } catch (IOException closeException) {
+
                 // hallittu exceptionin hallinta
                 closeException.printStackTrace();
             }
