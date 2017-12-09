@@ -31,6 +31,8 @@ public class SummausPalvelu {
                     // Lähetetään Y:lle portti jota me kuunnellaan (siis serverSocketin portti)
                     lahetaPortti();
                     clientSocket = serverSocket.accept();
+                    System.out.println("Yhteys hyväksytty");
+                    clientSocket.setSoTimeout(5000);
                     hyvaksytty = true;
                 } catch (SocketTimeoutException e) {
                     System.err.println("Y ei vastannut 5 sekunnin sisällä...");
@@ -57,8 +59,21 @@ public class SummausPalvelu {
 
     public static void main(String[] args) throws Exception {
         SummausPalvelu s = new SummausPalvelu();
+        boolean kaynnissa = true;
+        ObjectOutputStream serverinVirtaUlos = s.getoOut();
 
-        int summausPalvelijoidenLkm = s.lueLuku();
+        int summausPalvelijoidenLkm = -1;
+
+        try {
+            summausPalvelijoidenLkm = s.lueLuku();
+        } catch (Exception e) {
+            System.out.println("Y ei välittänyt lukua...");
+            serverinVirtaUlos.writeInt(-1);
+            serverinVirtaUlos.flush();
+            System.out.println("Suljetaan palvelu");
+            System.exit(0);
+        }
+
         System.out.println("saatiin Y:ltä pyyntö " + summausPalvelijoidenLkm + ":lle palvelijalle");
         System.out.println("Luodaan shared data");
         SharedData sd = new SharedData(summausPalvelijoidenLkm);
@@ -66,15 +81,18 @@ public class SummausPalvelu {
         portit = sd.satunnaisetPortit(summausPalvelijoidenLkm);
         s.lahetaPortit(portit);
         //viedään portit ja tarvittava lkm portteja
-        SummausThread summaus = new SummausThread(portit, summausPalvelijoidenLkm, sd);
+        new SummausThread(portit, summausPalvelijoidenLkm, sd);
 
-
-        boolean kaynnissa = true;
-        ObjectOutputStream serverinVirtaUlos = s.getoOut();
+        s.clientSocket.setSoTimeout(60000);
 
         while (kaynnissa) {
-
-            int komento = s.lueLuku();
+            int komento = -1;
+            try {
+                komento = s.lueLuku();
+            } catch (SocketTimeoutException e) {
+                System.out.println("Y:ltä ei ole tullut minuuttiin kyselyä...suljetaan ohjelma...");
+                System.exit(0);
+            }
             System.out.println("Y teki pyynnön: " + komento);
             int vastaus = -1;
             Thread.sleep(100);
@@ -133,7 +151,7 @@ public class SummausPalvelu {
             // luetaan kokonaisluku ObjectInputStreamista
             luku = oIn.readInt();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SocketTimeoutException();
         }
         return luku;
     }
