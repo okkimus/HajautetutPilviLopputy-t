@@ -12,6 +12,8 @@ public class SummausPalvelu {
     private static ObjectInputStream oIn;
     private final int PORT = 5000;
     private final boolean verbose = true;
+    private int kokeilut = 0;
+    public int palvelijoidenLkm;
 
     /**
      * Luodaan summauspalvelu ja sen tarvitsemat osaset.
@@ -20,12 +22,30 @@ public class SummausPalvelu {
         try {
             // ServerSocket kuuntelee PORT:iin tulevia yhteyksiä
             serverSocket = new ServerSocket(PORT);
-            // Lähetetään Y:lle portti jota me kuunnellaan (siis serverSocketin portti)
-            lahetaPortti();
-            // Yhdistetään serverSocketti clientSockettiin jolla lähetetään/vastaanotetaan dataa
-            clientSocket = serverSocket.accept();
+            serverSocket.setSoTimeout(5000);
 
-            // Yhdistetään kaikki input- ja output-virrat
+            boolean hyvaksytty = false;
+
+            while (!hyvaksytty) {
+                try {
+                    // Lähetetään Y:lle portti jota me kuunnellaan (siis serverSocketin portti)
+                    lahetaPortti();
+                    clientSocket = serverSocket.accept();
+                    hyvaksytty = true;
+                } catch (SocketTimeoutException e) {
+                    System.err.println("Y ei vastannut 5 sekunnin sisällä...");
+
+                    kokeilut++;
+                    if (kokeilut >= 5) {
+                        System.err.println("Kokeiltu 5 kertaa...lopetetaan.");
+                        System.exit(0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+                // Yhdistetään kaikki input- ja output-virrat
             iS = clientSocket.getInputStream();
             oS = clientSocket.getOutputStream();
             oOut = new ObjectOutputStream(oS);
@@ -104,7 +124,7 @@ public class SummausPalvelu {
      * Lukee ja palauttaa Y:n lähettämän luvun
      *
      */
-    private int lueLuku() {
+    private int lueLuku() throws SocketTimeoutException {
         int luku = -1;
         try {
             // luetaan kokonaisluku ObjectInputStreamista
@@ -124,7 +144,7 @@ public class SummausPalvelu {
             System.out.println("Yritetään lähettää TCP portin numeroa.");
         }
         // Luodaan DatagramSocket UDP-paketin lähettämiseksi
-        DatagramSocket clientSocket = new DatagramSocket();
+        DatagramSocket cSocket = new DatagramSocket();
         InetAddress IPAddress = InetAddress.getByName("localhost");
         System.out.println(serverSocket);
         
@@ -135,12 +155,12 @@ public class SummausPalvelu {
         sendPort = serverSocketPort.getBytes();
 
         DatagramPacket sendPacket = new DatagramPacket(sendPort, sendPort.length, IPAddress, 3126);
-        clientSocket.send(sendPacket);
+        cSocket.send(sendPacket);
         if (verbose) {
             System.out.println("UDP paketti lähetetty, suljetaan UPD socket.");
         }
         // Suljetaan DatagramSocket kun UDP paketti on lähetetty
-        clientSocket.close();
+        cSocket.close();
     }
 
     private void suljeSocketit() throws IOException {
