@@ -73,6 +73,7 @@ public class SummausPalvelu {
         ObjectOutputStream serverinVirtaUlos = s.getoOut();
 
         while (kaynnissa) {
+
             int komento = s.lueLuku();
             System.out.println("Y teki pyynnön: " + komento);
             int vastaus = -1;
@@ -81,6 +82,7 @@ public class SummausPalvelu {
             switch (komento) {
                 case 0:
                     kaynnissa = false; // TODO: hoida kaikki sulkemiseen tarvittavat asiat.
+                    break;
                 case 1:
                     synchronized (sd) {
                         vastaus = sd.palautaKokonaissumma();
@@ -88,7 +90,6 @@ public class SummausPalvelu {
                 case 2:
                     synchronized (sd) {
                         vastaus = sd.palautaSuurimmanSummanPalvelija();
-                        System.out.println("CASE 2 VASTAUS: " + vastaus);
                     }break;
                 case 3:
                     synchronized (sd) {
@@ -100,6 +101,8 @@ public class SummausPalvelu {
                 serverinVirtaUlos.flush();
             } else {
                s.suljeSocketit();
+               System.out.println("Suljetaan ohjelma");
+               System.exit(0);
             }
 
         }

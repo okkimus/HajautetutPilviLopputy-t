@@ -24,7 +24,7 @@ public class SharedData {
      * Laskee summat listan lukujen summan ja palauttaa sen
      */
     public synchronized int palautaKokonaissumma() {
-        System.out.println(Arrays.toString(summat));
+        //System.out.println(Arrays.toString(summat));
         int summa = 0;
         for (int i : summat) {
             summa += i;
@@ -36,7 +36,7 @@ public class SharedData {
      * Palauttaa indeksin, jolla on suurin summa
      */
     public synchronized int palautaSuurimmanSummanPalvelija() {
-        System.out.println(Arrays.toString(summat));
+        //System.out.println(Arrays.toString(summat));
         int indeksi = 0;
         for (int i = 0; i < summat.length; i++) {
             if (summat[indeksi] < summat[i]) {
@@ -48,7 +48,7 @@ public class SharedData {
 
     public int palautaLukujenLukumaara() {
 
-        System.out.println(Arrays.toString(summat));
+        //System.out.println(Arrays.toString(summat));
         return lkm;
     }
 

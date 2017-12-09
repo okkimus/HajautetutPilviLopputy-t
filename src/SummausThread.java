@@ -78,10 +78,12 @@ public class SummausThread {
                 boolean lukujaJaljella = true;
 
                 while (lukujaJaljella) {
-                    int luku = oIn.readInt();
-
-                    // testaukseen
-                    //System.out.println("WorkDistributorilta tullut luku: "+ luku);
+                    int luku = 0;
+                    try {
+                        luku = oIn.readInt();
+                    } catch (Exception e) {
+                        System.out.println("SummausThreadiin indeksissä " + this.indeksi + " tulevat luvut loppuneet");
+                    }
 
                     if (luku == 0) {
                         lukujaJaljella = false;
