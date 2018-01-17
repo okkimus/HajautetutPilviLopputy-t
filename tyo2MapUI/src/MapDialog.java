@@ -69,6 +69,7 @@ public class MapDialog extends JFrame {
 
         pack();
         setVisible(true);
+        updateImage();
 
     }
 
@@ -141,6 +142,7 @@ public class MapDialog extends JFrame {
     // Tarkastetaan mitkä karttakerrokset on valittu,
     // tehdään uudesta karttakuvasta pyyntö palvelimelle ja päivitetään kuva
     public void updateImage() throws Exception {
+
         String s = "";
 
         // Tutkitaan, mitkä valintalaatikot on valittu, ja
@@ -155,7 +157,11 @@ public class MapDialog extends JFrame {
 
         // TODO:
         // getMap-KYSELYN URL-OSOITTEEN MUODOSTAMINEN JA KUVAN PÄIVITYS ERILLISESSÄ SÄIKEESSÄ
-        // imageLabel.setIcon(new ImageIcon(url));
+
+        newImageData nid = new newImageData();
+        newImageRequest nir = new newImageRequest(nid);
+        Thread.sleep(2000);
+        imageLabel.setIcon(nid.getImageIcon());
     }
 
 } // MapDialog
