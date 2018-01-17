@@ -20,7 +20,7 @@ public class xmlParserToFile {
             Transformer xform = tfactory.newTransformer();
 
             Document document = db.parse(url.openStream());
-            File myOutput = new File("c:\\Users\\Jan\\Desktop\\output.xml");
+            File myOutput = new File("output.xml");
             xform.transform(new DOMSource(document), new StreamResult(myOutput));
 
             //Normalize the XML Structure; It's just too important !!

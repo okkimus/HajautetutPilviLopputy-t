@@ -18,7 +18,7 @@ public class SAXparser {
         try {
             SAXParser saxParser = saxParserFactory.newSAXParser();
             LayerHandler handler = new LayerHandler();
-            saxParser.parse(new File("c:\\Users\\Jan\\Desktop\\output.xml"), handler);
+            saxParser.parse(new File("output.xml"), handler);
             //Get Layers list
             List<Layer> layerList = handler.getLayerList();
             //print layer information

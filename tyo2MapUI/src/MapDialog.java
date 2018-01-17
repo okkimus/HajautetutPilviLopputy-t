@@ -74,7 +74,7 @@ public class MapDialog extends JFrame {
 
         URL url = new URL("http://demo.mapserver.org/cgi-bin/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities");
 
-       xmlParserToFile xP = new xmlParserToFile(url);
+        xmlParserToFile xP = new xmlParserToFile(url);
 
         System.out.println("done");
 
