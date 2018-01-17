@@ -1,9 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.sound.midi.Soundbank;
 
 
 public class LayerHandler extends DefaultHandler {
@@ -15,7 +18,6 @@ public class LayerHandler extends DefaultHandler {
     boolean layer = false;
     boolean name = false;
     boolean title = false;
-
 
     //getter method for list of layers
     public List<Layer> getLayerList() {
@@ -39,10 +41,21 @@ public class LayerHandler extends DefaultHandler {
         //System.out.println("start element: "+qName);
         if (qName.equalsIgnoreCase("layer")) {
             System.out.println("start element: "+qName);
-            layer = true;
+
             if (layerList == null)
                 layerList = new ArrayList<>();
             laye = new Layer();
+
+            for (int i = 0; i < attributes.getLength(); i++) {
+                String aName = attributes.getQName(i);
+                if (aName.equals("opaque"))
+                    laye.setOpaque(Integer.parseInt(attributes.getValue(i)));
+                else if (aName.equals("cascaded"))
+                    laye.setCascaded(Integer.parseInt(attributes.getValue(i)));
+                else if (aName.equals("queryable"))
+                    laye.setQueryable(Integer.parseInt(attributes.getValue(i)));
+            }
+            layer = true;
 
             System.out.println("layer found");
 
@@ -59,11 +72,13 @@ public class LayerHandler extends DefaultHandler {
 
         //System.out.println("end element: " +qName);
 
+        /*
         if (qName.equalsIgnoreCase("Layer")) {
             System.out.println("end element: " +qName);
             //add layer object to list
             layerList.add(laye);
         }
+        */
          
     }
 
@@ -71,23 +86,26 @@ public class LayerHandler extends DefaultHandler {
     public void characters(char ch[], int start, int length) throws SAXException {
 
         //System.out.println("characters");
+        String read = new String(ch, start, length);
+
 
         if (layer && name) {
-            String nameString = new String(ch, start, length);
-            System.out.println(nameString);
+            System.out.println(read);
             //name element, set layer name
-            laye.setName(nameString);
+            laye.setName(read);
             if (laye.getTitle() != null)
                 layer = false;
+            else
+                layerList.add(laye);
             name = false;
         } else if (title) {
-            String titleString = new String(ch, start, length);
-            System.out.println(titleString);
-            laye.setTitle(titleString);
-            if (laye.getTitle() != null)
+            System.out.println(read);
+            laye.setTitle(read);
+            if (laye.getName() != null)
                 layer = false;
+            else
+                layerList.add(laye);
             title = false;
         }
-
     }
 }

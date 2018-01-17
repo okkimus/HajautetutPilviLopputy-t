@@ -2,9 +2,9 @@ public class Layer {
 
     private String name;
     private String title;
-    private int queryable = 0;
-    private int opaque = 0;
-    private int cascaded = 0;
+    private int queryable = -1;
+    private int opaque = -1;
+    private int cascaded = -1;
 
     public void setName(String name){
         this.name=name;
@@ -36,6 +36,6 @@ public class Layer {
 
     @Override
     public String toString() {
-        return "Layer: NAME=" + name + ", TITLE=" + title;
+        return "Layer: NAME=" + name + ", TITLE=" + title + ", OPAQUE: " + opaque + ", QUERYABLE: " + queryable + ", CASCADED: " + cascaded;
     }
 }
