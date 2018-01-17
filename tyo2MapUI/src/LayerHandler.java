@@ -40,7 +40,8 @@ public class LayerHandler extends DefaultHandler {
         if (qName.equalsIgnoreCase("layer")) {
             System.out.println("start element: "+qName);
             layer = true;
-            layerList = new ArrayList<>();
+            if (layerList == null)
+                layerList = new ArrayList<>();
             laye = new Layer();
 
             System.out.println("layer found");
