@@ -20,7 +20,9 @@ public class MapDialog extends JFrame {
     private JButton zoomInB = new JButton("+");
     private JButton zoomOutB = new JButton("-");
 
-    public MapDialog() throws Exception {
+    private LayerHandler lh = new LayerHandler();
+
+    public MapDialog(LayerHandler lh) throws Exception {
 
         // Valmistele ikkuna ja lisää siihen komponentit
 
@@ -49,8 +51,10 @@ public class MapDialog extends JFrame {
         // TODO:
         // ALLA OLEVIEN KOLMEN TESTIRIVIN TILALLE SILMUKKA JOKA LISÄÄ KÄYTTÖLIITTYMÄÄN
         // KAIKKIEN XML-DATASTA HAETTUJEN KERROSTEN VALINTALAATIKOT MALLIN MUKAAN
-        leftPanel.add(new LayerCheckBox("bluemarble", "Maapallo", true));
-        leftPanel.add(new LayerCheckBox("cities", "Kaupungit", false));
+        for (Layer layer : lh.getLayerList())
+            leftPanel.add(new LayerCheckBox(layer.getName(), layer.getTitle(), true));
+        //leftPanel.add(new LayerCheckBox("bluemarble", "Maapallo", true));
+        //leftPanel.add(new LayerCheckBox("cities", "Kaupungit", false));
 
         leftPanel.add(refreshB);
         leftPanel.add(Box.createVerticalStrut(20));
@@ -70,15 +74,18 @@ public class MapDialog extends JFrame {
 
     public static void main(String[] args) throws Exception {
 
-        //new MapDialog();
-
         URL url = new URL("http://demo.mapserver.org/cgi-bin/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities");
 
         xmlParserToFile xP = new xmlParserToFile(url);
 
         System.out.println("done");
 
-        SAXparser Sp = new SAXparser();
+        LayerHandler handler = new LayerHandler();
+
+        SAXparser Sp = new SAXparser(handler);
+
+        new MapDialog(handler);
+
     }
 
     // Kontrollinappien kuuntelija

@@ -11,13 +11,13 @@ import org.xml.sax.SAXException;
 
 public class SAXparser {
 
-    public SAXparser() {
+    public SAXparser(LayerHandler lh) {
 
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 
         try {
             SAXParser saxParser = saxParserFactory.newSAXParser();
-            LayerHandler handler = new LayerHandler();
+            LayerHandler handler = lh;
             saxParser.parse(new File("output.xml"), handler);
             //Get Layers list
             List<Layer> layerList = handler.getLayerList();
