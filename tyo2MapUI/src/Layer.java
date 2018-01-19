@@ -1,7 +1,22 @@
+/**
+ * Authors:
+ * Jan-Mikael Ihanus, jamiih@utu,fi, 516329
+ * Mikko Metsäranta, misame@utu.fi, 515662
+ *
+ * course: HAJAUTETUT OHJELMISTOJÄRJESTELMÄT JA PILVIPALVELUT, SYKSY 2017
+ */
+
+
+/**
+ * Luokka kuvaa kartan mahdollisia kerroksia.
+ *
+ */
 public class Layer {
 
     private String name;
     private String title;
+    // Data XML:stä tulee muodossa "0" tai "1", joten alustetaan muuttujat -1:llä. Saadaan tietää, onko muuttujan tieto
+    // käytettävästä datasta vai ei. (Defaultina Java alustaa kokonaisluvut arvolla 0.)
     private int queryable = -1;
     private int opaque = -1;
     private int cascaded = -1;
