@@ -21,6 +21,7 @@ public class MapDialog extends JFrame {
     private JButton zoomOutB = new JButton("-");
 
     private LayerHandler lh = new LayerHandler();
+    private Coordinates cord = new Coordinates(180, -180, 90, -90);
 
     public MapDialog(LayerHandler lh) throws Exception {
 
@@ -69,7 +70,6 @@ public class MapDialog extends JFrame {
 
         pack();
         setVisible(true);
-        updateImage();
 
     }
 
@@ -100,31 +100,43 @@ public class MapDialog extends JFrame {
                 // TODO:
                 // VASEMMALLE SIIRTYMINEN KARTALLA
                 // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+                cord.moveLeft(10);
+                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
             }
             if(e.getSource() == rightB) {
                 // TODO:
                 // OIKEALLE SIIRTYMINEN KARTALLA
                 // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+                cord.moveRight(10);
+                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
             }
             if(e.getSource() == upB) {
                 // TODO:
                 // YLÖSPÄIN SIIRTYMINEN KARTALLA
                 // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+                cord.moveUp(10);
+                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
             }
             if(e.getSource() == downB) {
                 // TODO:
                 // ALASPÄIN SIIRTYMINEN KARTALLA
                 // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+                cord.moveDown(10);
+                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
             }
             if(e.getSource() == zoomInB) {
                 // TODO:
                 // ZOOM IN -TOIMINTO
                 // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+                cord.zoomIn(10);
+                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
             }
             if(e.getSource() == zoomOutB) {
                 // TODO:
                 // ZOOM OUT -TOIMINTO
                 // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+                cord.zoomOut(10);
+                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
             }
         }
     }
@@ -157,12 +169,23 @@ public class MapDialog extends JFrame {
 
         // TODO:
         // getMap-KYSELYN URL-OSOITTEEN MUODOSTAMINEN JA KUVAN PÄIVITYS ERILLISESSÄ SÄIKEESSÄ
+        int xU = cord.getxUpper();
+        int xL = cord.getxLower();
+        int yU = cord.getyUpper();
+        int yL = cord.getyLower();
+
+        String coordinates = xL + "," + yL + "," + xU + "," + yU;
+
+        System.out.println("COORDINATES NOW: " + coordinates);
+
         URL imageUrl = new URL("http://demo.mapserver.org/cgi-bin/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&BBOX="
-                // TÄNNE TULEE KOORDINAATIT
-                + "-180,-90,180,90" + "&SRS=EPSG:4326&WIDTH=953&HEIGHT=480&LAYERS="
-                + s + "&STYLES=&FORMAT=image/png&TRANSPARENT=true");
+                + coordinates
+                + "&SRS=EPSG:4326&WIDTH=953&HEIGHT=480&LAYERS="
+                + s
+                + "&STYLES=&FORMAT=image/png&TRANSPARENT=true");
 
         newImageData nid = new newImageData();
+
         newImageRequest nir = new newImageRequest(nid, imageUrl, imageLabel);
         //Thread.sleep(2000);
         //imageLabel.setIcon(nid.getImageIcon());
