@@ -58,9 +58,9 @@ public class Coordinates {
             xLower += step / 2;
             xUpper -= step / 2;
         }
-        if (yLower - yUpper < step) {
-            yLower += step / 2;
-            yUpper -= step / 2;
+        if (yLower - yUpper < -step / 2) {
+            yLower += step / 4;
+            yUpper -= step / 4;
         }
     }
 
@@ -78,12 +78,12 @@ public class Coordinates {
         if (yLower - step / 2 < MIN_Y) {
             yLower = MIN_Y;
         } else {
-            yLower -= step / 2;
+            yLower -= step / 4;
         }
         if (yUpper + step / 2 > MAX_Y) {
             yUpper = MAX_Y;
         } else {
-            yUpper += step / 2;
+            yUpper += step / 4;
         }
 
     }

@@ -128,14 +128,14 @@ public class MapDialog extends JFrame {
                 // TODO:
                 // ZOOM IN -TOIMINTO
                 // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
-                cord.zoomIn(10);
+                cord.zoomIn(12);
                 try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
             }
             if(e.getSource() == zoomOutB) {
                 // TODO:
                 // ZOOM OUT -TOIMINTO
                 // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
-                cord.zoomOut(10);
+                cord.zoomOut(12);
                 try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
             }
         }
