@@ -94,7 +94,7 @@ public class MapDialog extends JFrame {
     private class ButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == refreshB) {
-                //try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
+                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
             }
             if(e.getSource() == leftB) {
                 // TODO:
@@ -157,11 +157,15 @@ public class MapDialog extends JFrame {
 
         // TODO:
         // getMap-KYSELYN URL-OSOITTEEN MUODOSTAMINEN JA KUVAN PÄIVITYS ERILLISESSÄ SÄIKEESSÄ
+        URL imageUrl = new URL("http://demo.mapserver.org/cgi-bin/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&BBOX="
+                // TÄNNE TULEE KOORDINAATIT
+                + "-180,-90,180,90" + "&SRS=EPSG:4326&WIDTH=953&HEIGHT=480&LAYERS="
+                + s + "&STYLES=&FORMAT=image/png&TRANSPARENT=true");
 
         newImageData nid = new newImageData();
-        newImageRequest nir = new newImageRequest(nid);
-        Thread.sleep(2000);
-        imageLabel.setIcon(nid.getImageIcon());
+        newImageRequest nir = new newImageRequest(nid, imageUrl, imageLabel);
+        //Thread.sleep(2000);
+        //imageLabel.setIcon(nid.getImageIcon());
     }
 
 } // MapDialog
