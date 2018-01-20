@@ -54,11 +54,11 @@ public class Coordinates {
 
     public void zoomIn(int step) {
         System.out.println("xU: " + xUpper + " xL" + xLower);
-        if (xLower - xUpper < step) {
+        if (xUpper - xLower > step) {
             xLower += step / 2;
             xUpper -= step / 2;
         }
-        if (yLower - yUpper < -step / 2) {
+        if (yUpper - yLower > step / 2) {
             yLower += step / 4;
             yUpper -= step / 4;
         }
