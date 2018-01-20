@@ -15,6 +15,7 @@ public class Layer {
 
     private String name;
     private String title;
+
     // Data XML:stä tulee muodossa "0" tai "1", joten alustetaan muuttujat -1:llä. Saadaan tietää, onko muuttujan tieto
     // käytettävästä datasta vai ei. (Defaultina Java alustaa kokonaisluvut arvolla 0.)
     private int queryable = -1;

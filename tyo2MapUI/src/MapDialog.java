@@ -1,13 +1,27 @@
-// Kartankatseluohjelman graafinen käyttoliittymä
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
 
+
+/**
+ * Authors:
+ * Jan-Mikael Ihanus, jamiih@utu,fi, 516329
+ * Mikko Metsäranta, misame@utu.fi, 515662
+ * <p>
+ * course: HAJAUTETUT OHJELMISTOJÄRJESTELMÄT JA PILVIPALVELUT, SYKSY 2017
+ */
+
+
+/** Kartankatseluohjelman graafinen käyttoliittymä
+ *
+ * Luokka, joka hoitaa uuden säikeen luomisen kuvan hakua ja päivitystä varten.
+ *
+ */
+
 public class MapDialog extends JFrame {
 
-    // Käyttöliittymän komponentit
+    // Käyttöliittymän komponentit, karttakuva (imageLabel) oikealle, napit vasemmalle
 
     private JLabel imageLabel = new JLabel();
     private JPanel leftPanel = new JPanel();
@@ -20,21 +34,29 @@ public class MapDialog extends JFrame {
     private JButton zoomInB = new JButton("+");
     private JButton zoomOutB = new JButton("-");
 
+
     private LayerHandler lh = new LayerHandler();
     private Coordinates cord = new Coordinates(180, -180, 90, -90);
 
+    /**
+     *
+     * @param lh viittaa LayerHander -luokkaan, joka käsittelee XML-tiedostosta tarvittavat tiedot karttakerroksiin
+     */
+
     public MapDialog(LayerHandler lh) throws Exception {
 
-        // Valmistele ikkuna ja lisää siihen komponentit
+        // Valmistelee ikkunan ja lisää siihen komponentit
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
 
-        // ALLA OLEVAN TESTIRIVIN VOI KORVATA JOLLAKIN MUULLA ERI ALOITUSNÄKYMÄN
-        // LATAAVALLA RIVILLÄ
+        // Ladataan kuva joka näytetään kun ohjelma käynnistetään
+
         imageLabel.setIcon(new ImageIcon(new URL("http://demo.mapserver.org/cgi-bin/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&BBOX=-180,-90,180,90&SRS=EPSG:4326&WIDTH=953&HEIGHT=480&LAYERS=bluemarble,cities&STYLES=&FORMAT=image/png&TRANSPARENT=true")));
 
         add(imageLabel, BorderLayout.EAST);
+
+        // napit aktiiviseksi
 
         ButtonListener bl = new ButtonListener();
         refreshB.addActionListener(bl);
@@ -49,13 +71,16 @@ public class MapDialog extends JFrame {
         leftPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         leftPanel.setMaximumSize(new Dimension(100, 600));
 
-        // TODO:
-        // ALLA OLEVIEN KOLMEN TESTIRIVIN TILALLE SILMUKKA JOKA LISÄÄ KÄYTTÖLIITTYMÄÄN
-        // KAIKKIEN XML-DATASTA HAETTUJEN KERROSTEN VALINTALAATIKOT MALLIN MUKAAN
-        for (Layer layer : lh.getLayerList())
+        // Silmukka, joka luo karttakerroksen eri kerrosvaihtoehdot valittaviksi checkboxeiksi
+        // jättää pois ensimmäisen kerroksen (WMS Demo Server for MapServer)
+
+        for (int i = 1; i < lh.getLayerList().size(); i++) {
+            Layer layer = lh.getLayerList().get(i);
+
             leftPanel.add(new LayerCheckBox(layer.getName(), layer.getTitle(), true));
-        //leftPanel.add(new LayerCheckBox("bluemarble", "Maapallo", true));
-        //leftPanel.add(new LayerCheckBox("cities", "Kaupungit", false));
+        }
+
+        //Painikkeet vasemmalle puolelle
 
         leftPanel.add(refreshB);
         leftPanel.add(Box.createVerticalStrut(20));
@@ -79,8 +104,6 @@ public class MapDialog extends JFrame {
 
         xmlParserToFile xP = new xmlParserToFile(url);
 
-        System.out.println("done");
-
         LayerHandler handler = new LayerHandler();
 
         SAXparser Sp = new SAXparser(handler);
@@ -90,53 +113,75 @@ public class MapDialog extends JFrame {
     }
 
     // Kontrollinappien kuuntelija
-    // KAIKKIEN NAPPIEN YHTEYDESSÄ VOINEE HYÖDYNTÄÄ updateImage()-METODIA
-    private class ButtonListener implements ActionListener{
+
+    private class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            if(e.getSource() == refreshB) {
-                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
+            if (e.getSource() == refreshB) {
+                try {
+                    updateImage();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
-            if(e.getSource() == leftB) {
-                // TODO:
-                // VASEMMALLE SIIRTYMINEN KARTALLA
-                // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+            if (e.getSource() == leftB) {
+
+                // Siirtyminen kartalla vasemmalle
                 cord.moveLeft(10);
-                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
+                try {
+                    updateImage();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
-            if(e.getSource() == rightB) {
-                // TODO:
-                // OIKEALLE SIIRTYMINEN KARTALLA
-                // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+            if (e.getSource() == rightB) {
+
+                // Siirtyminen kartalle oikealle
                 cord.moveRight(10);
-                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
+                try {
+                    updateImage();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
-            if(e.getSource() == upB) {
-                // TODO:
-                // YLÖSPÄIN SIIRTYMINEN KARTALLA
-                // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+            if (e.getSource() == upB) {
+
+                // Siirtyminen kartalla ylöspäin
                 cord.moveUp(10);
-                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
+                try {
+                    updateImage();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
-            if(e.getSource() == downB) {
-                // TODO:
-                // ALASPÄIN SIIRTYMINEN KARTALLA
-                // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+            if (e.getSource() == downB) {
+
+                // Siirtyminen kartalla alaspäin
                 cord.moveDown(10);
-                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
+                try {
+                    updateImage();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
-            if(e.getSource() == zoomInB) {
-                // TODO:
-                // ZOOM IN -TOIMINTO
-                // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+            if (e.getSource() == zoomInB) {
+
+                // Zoomaa sisäänpäin kartalla
                 cord.zoomIn(12);
-                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
+                try {
+                    updateImage();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
-            if(e.getSource() == zoomOutB) {
-                // TODO:
-                // ZOOM OUT -TOIMINTO
-                // MUUTA KOORDINAATTEJA, HAE KARTTAKUVA PALVELIMELTA JA PÄIVITÄ KUVA
+            if (e.getSource() == zoomOutB) {
+
+                // Zoomaa ulospäin kartalla
                 cord.zoomOut(12);
-                try { updateImage(); } catch(Exception ex) { ex.printStackTrace(); }
+                try {
+                    updateImage();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }
@@ -144,11 +189,15 @@ public class MapDialog extends JFrame {
     // Valintalaatikko, joka muistaa karttakerroksen nimen
     private class LayerCheckBox extends JCheckBox {
         private String name = "";
+
         public LayerCheckBox(String name, String title, boolean selected) {
             super(title, null, selected);
             this.name = name;
         }
-        public String getName() { return name; }
+
+        public String getName() {
+            return name;
+        }
     }
 
     // Tarkastetaan mitkä karttakerrokset on valittu,
@@ -158,17 +207,16 @@ public class MapDialog extends JFrame {
         String s = "";
 
         // Tutkitaan, mitkä valintalaatikot on valittu, ja
-        // kerätään s:��n pilkulla erotettu lista valittujen kerrosten
+        // kerätään s:ään pilkulla erotettu lista valittujen kerrosten
         // nimistä (käytetään haettaessa uutta kuvaa)
         Component[] components = leftPanel.getComponents();
-        for(Component com:components) {
-            if(com instanceof LayerCheckBox)
-                if(((LayerCheckBox)com).isSelected()) s = s + com.getName() + ",";
+        for (Component com : components) {
+            if (com instanceof LayerCheckBox)
+                if (((LayerCheckBox) com).isSelected()) s = s + com.getName() + ",";
         }
         if (s.endsWith(",")) s = s.substring(0, s.length() - 1);
 
-        // TODO:
-        // getMap-KYSELYN URL-OSOITTEEN MUODOSTAMINEN JA KUVAN PÄIVITYS ERILLISESSÄ SÄIKEESSÄ
+        // haetaan koordinaatit
         int xU = cord.getxUpper();
         int xL = cord.getxLower();
         int yU = cord.getyUpper();
@@ -187,8 +235,5 @@ public class MapDialog extends JFrame {
         newImageData nid = new newImageData();
 
         newImageRequest nir = new newImageRequest(nid, imageUrl, imageLabel);
-        //Thread.sleep(2000);
-        //imageLabel.setIcon(nid.getImageIcon());
     }
-
 } // MapDialog

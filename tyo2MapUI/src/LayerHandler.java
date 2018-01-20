@@ -23,7 +23,8 @@ import javax.sound.midi.Soundbank;
  */
 public class LayerHandler extends DefaultHandler {
 
-    //List to hold Layer object
+    // lista kartan kerroksille
+
     private List<Layer> layerList = null;
     private Layer laye = null;
 
@@ -31,7 +32,8 @@ public class LayerHandler extends DefaultHandler {
     boolean name = false;
     boolean title = false;
 
-    //getter method for list of layers
+    // palauttaa listan kerroksista
+
     public List<Layer> getLayerList() {
         return layerList;
     }
@@ -56,11 +58,8 @@ public class LayerHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes)
             throws SAXException {
 
-        //System.out.println("start element: "+qName);
-
         // Tarkistetaan onko elementti "Layer" elementti
         if (qName.equalsIgnoreCase("layer")) {
-            System.out.println("start element: "+qName);
 
             // Jos kerroslistaa ei ole alustettu, alustetaan se.
             if (layerList == null)
@@ -83,7 +82,6 @@ public class LayerHandler extends DefaultHandler {
 
         // Jos löytyy layer ja elementtin tagi on "name", tehdään tarvittavat asetukset totuusarvolle.
         } else if (layer && qName.equalsIgnoreCase("name")) {
-            //set boolean values for fields, will be used in setting layer variables
             name = true;
 
         // Jos löytyy layer ja elementtin tagi on "title", tehdään tarvittavat asetukset totuusarvolle.
@@ -96,16 +94,6 @@ public class LayerHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
 
-        //System.out.println("end element: " +qName);
-
-        /*
-        if (qName.equalsIgnoreCase("Layer")) {
-            System.out.println("end element: " +qName);
-            //add layer object to list
-            layerList.add(laye);
-        }
-        */
-         
     }
 
     /**
@@ -120,8 +108,6 @@ public class LayerHandler extends DefaultHandler {
 
         // Jos datasta on löytyn "Layer" ja "Name" tagit
         if (layer && name) {
-            //System.out.println(read);
-            //name element, set layer name
             laye.setName(read);
 
             // Jos luotavassa layerissä on jo myös otsikko, layer on valmis. Merkataan totuusarvo falseksi, että seuraavan
@@ -134,9 +120,10 @@ public class LayerHandler extends DefaultHandler {
 
             // "name" -kentän tietue on nyt luettu
             name = false;
+
         } else if (layer && title) {
-            //System.out.println(read);
             laye.setTitle(read);
+
             // Jos luotavassa layerissä on jo myös nimi, layer on valmis. Merkataan totuusarvo falseksi, että seuraavan
             // layerin lukeminen tulee mahdolliseksi
             if (laye.getName() != null)
