@@ -1,3 +1,15 @@
+/**
+ * Authors:
+ * Jan-Mikael Ihanus, jamiih@utu,fi, 516329
+ * Mikko Metsäranta, misame@utu.fi, 515662
+ *
+ * course: HAJAUTETUT OHJELMISTOJÄRJESTELMÄT JA PILVIPALVELUT, SYKSY 2017
+ */
+
+/**
+ * Luokka kartan koordinaateille ja niiden hallinnoimiseen
+ */
+
 public class Coordinates {
     private final int MAX_X = 180;
     private final int MIN_X = -180;

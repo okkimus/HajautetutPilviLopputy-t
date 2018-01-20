@@ -8,6 +8,13 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 
+/**
+ * Authors:
+ * Jan-Mikael Ihanus, jamiih@utu,fi, 516329
+ * Mikko Metsäranta, misame@utu.fi, 515662
+ *
+ * course: HAJAUTETUT OHJELMISTOJÄRJESTELMÄT JA PILVIPALVELUT, SYKSY 2017
+ */
 
 public class SAXparser {
 
@@ -19,9 +26,11 @@ public class SAXparser {
             SAXParser saxParser = saxParserFactory.newSAXParser();
             LayerHandler handler = lh;
             saxParser.parse(new File("output.xml"), handler);
-            //Get Layers list
+
+            //Hakee listan kerroksia
             List<Layer> layerList = handler.getLayerList();
-            //print layer information
+
+            //tulostaa listan kerrokset
             for (Layer layer : layerList)
                 System.out.println(layer);
         } catch (ParserConfigurationException | SAXException | IOException e) {
