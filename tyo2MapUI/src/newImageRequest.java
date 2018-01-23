@@ -74,7 +74,7 @@ public class newImageRequest {
      */
     class ImageRequestHandler extends Thread {
 
-        private ArrayList<URL> urls;
+        protected ArrayList<URL> urls;
 
 
         public ImageRequestHandler() {
@@ -84,6 +84,7 @@ public class newImageRequest {
         public void run() {
             try {
                 while (!urls.isEmpty()) {
+                    urls = new ArrayList<URL>(urls.subList(urls.size() - 1, urls.size()));
                     ImageIcon img = fetchImage(urls.remove(0));
                     setImage(img);
                 }
