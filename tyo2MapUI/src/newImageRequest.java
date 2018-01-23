@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Authors:
@@ -19,59 +20,81 @@ public class newImageRequest {
 
     private newImageData nid;
     private JLabel imageLabel;
+    private ImageRequestHandler irh;
 
     /**
      *
-     * @param nid kuvan tietoluokan osoittaminen
-     * @param imageUrl kuvaosoite, jolla uusi kuva haetaan nettisivuilta
      * @param jLabel itse karttakuva, joka päivitetään käyttöliittymään
      */
 
-    public newImageRequest(newImageData nid, URL imageUrl, JLabel jLabel) {
+    public newImageRequest(JLabel jLabel) {
         imageLabel = jLabel;
+        irh = new ImageRequestHandler();
 
+    }
+
+    /**
+     *
+     * @param imageUrl kuvaosoite, jolla uusi kuva haetaan nettisivuilta
+     */
+    public void updateMap(URL imageUrl) {
         try {
-
-            new ImageRequestHandler(nid, imageUrl).start();
+            if (irh.isAlive()) {
+                irh.addUrl(imageUrl);
+            } else {
+                irh = new ImageRequestHandler();
+                irh.addUrl(imageUrl);
+                irh.start();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
 
         }
+
     }
+
+    private void setImage(ImageIcon img) {
+        // Asetetaan kuva käyttöliittymän JLabeliin.
+        imageLabel.setIcon(img);
+    }
+
+    private ImageIcon fetchImage(URL imageUrl) {
+        // Haetaan kuva annetulla URL:illa
+        System.out.println(Thread.currentThread().getName() + " alkoi hakea kuvaa");
+        ImageIcon imageIcon = new ImageIcon(imageUrl);
+
+        System.out.println(Thread.currentThread().getName() + " haki kuvan");
+        return imageIcon;
+    }
+
 
     /**
      *  Luokka luomaan kuvanhakuthread
      */
-
     class ImageRequestHandler extends Thread {
 
-        newImageData nid;
-        URL imageUrl;
+        private ArrayList<URL> urls;
 
-        /**
-         *
-         * @param newimagedata kuvan tietoluokan osoittaminen
-         * @param imgUrl kuvaosoite, jolla uusi kuva haetaan nettisivuilta
-         */
 
-        public ImageRequestHandler(newImageData newimagedata, URL imgUrl) {
-            nid = newimagedata;
-            imageUrl = imgUrl;
+        public ImageRequestHandler() {
+            urls = new ArrayList<>();
         }
 
         public void run() {
             try {
-
-                // Haetaan kuva annetulla URL:illa
-                ImageIcon imageIcon = new ImageIcon(imageUrl);
-
-                // Asetetaan kuva käyttöliittymän JLabeliin.
-                imageLabel.setIcon(imageIcon);
-
+                while (!urls.isEmpty()) {
+                    ImageIcon img = fetchImage(urls.remove(0));
+                    setImage(img);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        public void addUrl(URL imageUrl) {
+            urls.add(imageUrl);
+        }
+
     }
 }

@@ -37,6 +37,7 @@ public class MapDialog extends JFrame {
 
     private LayerHandler lh = new LayerHandler();
     private Coordinates cord = new Coordinates(180, -180, 90, -90);
+    private newImageRequest nir = new newImageRequest(imageLabel);
 
     /**
      *
@@ -232,8 +233,9 @@ public class MapDialog extends JFrame {
                 + s
                 + "&STYLES=&FORMAT=image/png&TRANSPARENT=true");
 
-        newImageData nid = new newImageData();
+        //newImageData nid = new newImageData();
 
-        newImageRequest nir = new newImageRequest(nid, imageUrl, imageLabel);
+        nir.updateMap(imageUrl);
+
     }
 } // MapDialog
